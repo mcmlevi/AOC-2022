@@ -28,7 +28,7 @@ int main()
 		else if (elfTwoRange.first == elfOneRange.first && elfOneRange.second < elfTwoRange.second)
 			std::swap(elfOneRange, elfTwoRange);
 
-		if (elfTwoRange.first >= elfOneRange.first && elfTwoRange.second <= elfOneRange.second)
+		if (elfOneRange.first <= elfTwoRange.second && elfTwoRange.first <= elfOneRange.second)
 			++numberOfContainedRanges;
 	}
 
