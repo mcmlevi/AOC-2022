@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #include <span>
+#include <unordered_map>
 #include <unordered_set>
 
 int main()
@@ -16,18 +17,22 @@ int main()
 
 	while (!fileStream.eof())
 	{
-		std::string line;
-		std::getline(fileStream, line);
-		std::unordered_set<char> itemsInFirstCompartement{line.begin(), line.begin() + line.size() / 2};
-
-		for (const char item : std::span{ line.begin() + line.size() / 2, line.end() })
+		std::unordered_map<char, int> itemCountMap;
+		for (int i = 0; i < 3; ++i)
 		{
-			if (itemsInFirstCompartement.find(item) != itemsInFirstCompartement.end())
-			{
-				totalSum += (std::isupper(item) ? item - 'A' + 26 : item - 'a') + 1;
-				break;
-			}
+			std::string line;
+			std::getline(fileStream, line);
+			
+			std::unordered_set<char> uniqueItems{ line.begin(), line.end() };
+			for (char item : uniqueItems)
+				itemCountMap[item]++;
 		}
+		
+		char item = std::find_if(itemCountMap.begin(), itemCountMap.end(), [](std::pair<const char, int> inPair) { 
+			return inPair.second == 3;
+		})->first;
+
+		totalSum += (std::isupper(item) ? item - 'A' + 26 : item - 'a') + 1;
 	}
 
 	std::cout << totalSum << "\n";
