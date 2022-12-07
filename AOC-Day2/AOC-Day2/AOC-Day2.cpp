@@ -4,6 +4,10 @@
 #include <string>
 #include <cassert>
 #include <stdint.h>
+#include <array>
+
+const std::array<char, 3> looseLookupTable{2, 0, 1};
+const std::array<char, 3> winLookupTable{1, 2, 0};
 
 int main()
 {
@@ -18,17 +22,15 @@ int main()
 
 		assert(line.size() == 3, "unexpected format");
 
-		char opponentChoice = line[0] - 'A' + 1;
-		char myChoice = line[2] - 'X' + 1;
+		char opponentChoice = line[0] - 'A';
+		char desiredGameResult = line[2] - 'X';
 
-		totalScore += myChoice;
-
-		int gameResult = opponentChoice - myChoice;
-		
-		if (gameResult == -1 || gameResult == 2)
-			totalScore += 6;
-		else if (gameResult == 0)
-			totalScore += 3;
+		if (desiredGameResult == 0)
+			totalScore += looseLookupTable[opponentChoice] + 1;
+		else if (desiredGameResult == 1)
+			totalScore += opponentChoice + 1 + 3;
+		else
+			totalScore += winLookupTable[opponentChoice] + 1 + 6;
 	}
 
 	std::cout << totalScore << "\n";
