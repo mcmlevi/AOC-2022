@@ -29,6 +29,7 @@ containerList GetContainers(std::ifstream& inFileStream)
 		int containerIndex = 0;
 		for (auto container : containerRange)
 		{
+			// The first container starts at index 0 so the item is 1 index away, any other cargo item is 2 items away as the index is on the space.
 			char cargo = line[container + (containerIndex == 0 ? 1 : 2)];
 			bool isValidContainer = cargo != ' ' && !std::isdigit(cargo);
 			
@@ -76,6 +77,7 @@ int main()
 		std::getline(fileStream, line);
 
 		Instruction instruction = GetInstruction(line);
+
 		std::deque<char> stackToMove;
 		for(int i = 0; i < instruction.count; ++i)
 		{
