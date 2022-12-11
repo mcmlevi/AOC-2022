@@ -9,8 +9,8 @@
 
 struct Vec2
 {
-	int x;
-	int y;
+	int x = 0;
+	int y = 0;
 	
 	Vec2& operator+=(const Vec2 inOther)
 	{
@@ -78,19 +78,28 @@ Vec2 GetNewTailPos(const Vec2& inHead, const Vec2& inTail)
 	return { inTail.x + xOffSet, inTail.y + yOffset };
 }
 
-void MoveHead(Vec2& inCurrentHeadPos, Vec2& inCurrentTailPos, char inDirection, int inCount, std::unordered_set<Vec2>& inVisisitedPositions)
+void MoveHead(Vec2& inCurrentHeadPos, std::vector<Vec2>& inKnots, char inDirection, int inCount, std::unordered_set<Vec2>& inVisisitedPositions)
 {
 	Vec2 directionToMove = GetDirection(inDirection);
 	
 	for (int i = 0; i < inCount; ++i)
 	{
 		inCurrentHeadPos += directionToMove;
+		Vec2 PositionToCompareTo = inCurrentHeadPos;
 		
-		if (IsTouching(inCurrentHeadPos, inCurrentTailPos))
-			continue;
+		for (Vec2& knotPosition : inKnots)
+		{				
+			if (IsTouching(PositionToCompareTo, knotPosition))
+			{
+				PositionToCompareTo = knotPosition;
+				continue;
+			}
 
-		inCurrentTailPos = GetNewTailPos(inCurrentHeadPos, inCurrentTailPos);
-		inVisisitedPositions.insert(inCurrentTailPos);
+			knotPosition = GetNewTailPos(PositionToCompareTo, knotPosition);
+			PositionToCompareTo = knotPosition;
+		}
+
+		inVisisitedPositions.insert(inKnots.back());
 	}
 }
 
@@ -102,16 +111,18 @@ int main()
 	std::unordered_set<Vec2> visitedPositions;
 
 	Vec2 currentHeadPosition = { 0,0 };
-	Vec2 currentTailPosition = { 0,0 };
+	
+	std::vector<Vec2> knots;
+	knots.resize(9);
 
-	visitedPositions.insert(currentTailPosition);
+	visitedPositions.insert(knots.back());
 
 	while(!fileStream.eof())
 	{
 		char direction;
 		int count;
 		fileStream >> direction >> count;
-		MoveHead(currentHeadPosition, currentTailPosition, direction, count, visitedPositions);
+		MoveHead(currentHeadPosition, knots, direction, count, visitedPositions);
 	}
 
 	std::cout << "Positions visited: " << visitedPositions.size() << "\n";
