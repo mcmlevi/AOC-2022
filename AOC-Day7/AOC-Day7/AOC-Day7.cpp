@@ -30,11 +30,11 @@ Instruction GetNextInstruction(std::ifstream& inFileStream)
 	std::string instructionLine;
 	std::getline(inFileStream, instructionLine);
 
-	if (instructionLine.find("ls") != std::string::npos)
+	if (instructionLine.find("$ ls") != std::string::npos)
 	{
 		nextInstruction.type = Instruction::Type::ls;
 	}
-	else if (instructionLine.find("cd") != std::string::npos)
+	else if (instructionLine.find("$ cd") != std::string::npos)
 	{
 		auto pos = instructionLine.find("cd") + 3;
 		nextInstruction.instructionContext = instructionLine.substr(pos, instructionLine.size() - pos);

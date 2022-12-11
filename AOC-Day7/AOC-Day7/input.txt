@@ -415,6 +415,7 @@ $ ls
 $ cd ..
 $ cd ..
 $ cd ..
+$ cd ..
 $ cd lgz
 $ ls
 121541 wfvj.lnd
